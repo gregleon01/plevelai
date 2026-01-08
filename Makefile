@@ -20,4 +20,4 @@ usb:
 	@CAM=usb USB_INDEX=0 SHOW=1 ./scripts/quickstart.sh
 
 trt:
-	@./scripts/export_trt.sh vision/models/best.pt
+	@./scripts/export_trt.sh models/best.pt

@@ -7,6 +7,6 @@
 ## Quickstart
 ```bash
 chmod +x run_yolo_live.sh
-ln -sf /ssd/yolo/best_1.pt ../../vision/models/best.pt   # or copy your model here
+ln -sf /ssd/yolo/best_1.pt ../../models/best.pt   # or copy your model here
 export DISPLAY=:0; xhost +SI:localuser:$USER >/dev/null 2>&1 || true
-./run_yolo_live.sh ../../vision/models/best.pt --csi --show
+./run_yolo_live.sh ../../models/best.pt --csi --show

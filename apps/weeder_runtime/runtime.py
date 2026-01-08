@@ -16,10 +16,10 @@ try:
 except ImportError as exc:  # pragma: no cover - user must install dependency
     raise SystemExit("PyYAML is required: pip install pyyaml") from exc
 
-from control.host.serial_bridge import ArduinoBridge
-from kinematics.planar_arm import JointLimits
-from kinematics.pan_tilt import PanTiltRig
-from vision.calibration.homography import Homography
+from plevelai.control.host.serial_bridge import ArduinoBridge
+from plevelai.kinematics.planar_arm import JointLimits
+from plevelai.kinematics.pan_tilt import PanTiltRig
+from plevelai.vision.calibration.homography import Homography
 
 
 @dataclass

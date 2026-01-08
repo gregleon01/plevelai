@@ -8,7 +8,7 @@ set -euo pipefail
 #   USB_INDEX=0   (when CAM=usb)
 #   W=1280 H=720 FPS=30 IMGSZ=640 CONF=0.25 SHOW=1
 
-MODEL="${1:-../../vision/models/best.pt}"
+MODEL="${1:-../../models/best.pt}"
 W="${W:-1280}"; H="${H:-720}"; FPS="${FPS:-30}"
 IMGSZ="${IMGSZ:-640}"; CONF="${CONF:-0.25}"
 CAM="${CAM:-csi}"           # csi or usb

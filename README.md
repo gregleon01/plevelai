@@ -3,9 +3,9 @@
 PlevelAI turns a Jetson-powered camera feed into commands for a pan/tilt laser head. It detects weeds with YOLO, projects detections onto the ground plane, solves pan/tilt angles, and streams motion commands to an Arduino UNO R4 WiFi that drives the steppers (and soon, the laser gate).
 
 ## What it does today
-- Captures CSI or USB camera frames and runs a YOLO detector (`yolo_log_and_stream.py`).
+- Captures CSI or USB camera frames and runs a YOLO detector (`apps/yolo/yolo_log_and_stream.py`).
 - Logs detections, projects them through the calibrated homography, and prioritises a target queue (`apps/weeder_runtime`).
-- Solves pan/tilt angles with the kinematics helpers and emits JSON commands over USB serial (`control/host`).
+- Solves pan/tilt angles with the kinematics helpers and emits JSON commands over USB serial (`src/plevelai/control/host`).
 - Offers a minimal dashboard with video, status, and event feed (`dashboard`).
 
 ## Hardware snapshot
@@ -21,28 +21,29 @@ PlevelAI turns a Jetson-powered camera feed into commands for a pan/tilt laser h
 - PAN driver returns: PUL- -> D2 (STEP), DIR- -> D3 (DIR); leave ENA floating.
 - TILT driver returns: PUL- -> D5 (STEP), DIR- -> D6 (DIR); leave ENA floating.
 - Breadboard rails: red = +5 V logic, blue = shared ground reference.
-- DM556 controller firmware lives at `control/arduino/nano_r4/nano_r4.ino`; it drives queued moves with 15 microsecond step pulses, 20 microsecond DIR settle, adds a `motors_check` demo command, and assumes the drivers are set to 3200 pulses/rev.
+- DM556 controller firmware lives at `firmware/uno_r4/nano_r4.ino`; it drives queued moves with 15 microsecond step pulses, 20 microsecond DIR settle, adds a `motors_check` demo command, and assumes the drivers are set to 3200 pulses/rev.
 - Quick sanity check: `echo '{"cmd":"motors_check"}' > /dev/ttyACM0` homes, sweeps both axes, and fires two laser pulses.
 
 
 ## Software pipeline at a glance
 1. YOLO inference produces detections and MJPEG stream (`make run` or `./launch`).
 2. Detections are logged to `detections.log`.
-3. `apps.weeder_runtime.runtime` tails the log, filters duplicates, and solves pan/tilt angles via `kinematics.pan_tilt`.
+3. `apps.weeder_runtime.runtime` tails the log, filters duplicates, and solves pan/tilt angles via `plevelai.kinematics.pan_tilt`.
 4. The runtime sends `{ "cmd": "move", "joints": {"pan": theta, "tilt": phi}, ... }` over USB serial.
 5. (Optional) Dashboard server exposes `/video`, `/api/status`, and `/api/events` for monitoring.
 
 ## Repository layout
-- `apps/` - entry points (`yolo_live`, `weeder_runtime`).
-- `configs/` - robot and calibration configuration (`robot.yaml`).
-- `control/` - host serial bridge plus Arduino UNO R4 WiFi starter firmware.
-- `dashboard_pkg/` - FastAPI backend + simple JS frontend for monitoring.
-- `dashboard` - convenience launcher for the dashboard server.
+- `apps/` - entry points (`yolo_live`, `weeder_runtime`, `yolo`).
+- `bin/` - convenience entrypoints (`launch`, `dashboard`, `serial`).
+- `src/plevelai/` - core Python modules (vision, kinematics, control, dashboard backend).
+- `firmware/` - microcontroller firmware (UNO R4, teensy, safety).
+- `web/dashboard/` - dashboard frontend assets.
+- `configs/` - robot and runtime configuration.
+- `calibration/` - homography output (`H_img_to_ground.npy`).
+- `models/` - YOLO weights (pt/engine files).
+- `assets/` - media and reference images.
 - `docs/` - architecture and calibration notes.
-- `kinematics/` - pan/tilt inverse kinematics helpers.
 - `scripts/` - launch wrappers, installers, TRT exporter.
-- `vision/` - calibration utilities and model helpers.
-- `yolo_log_and_stream.py`, `yolo_to_log.py` - detection and logging utilities.
 
 ## Requirements
 **Hardware:** Jetson running JetPack 6.x (preferred) or a Linux machine with CUDA/GPU, CSI or USB camera, and the pan/tilt rig connected to an Arduino UNO R4 WiFi over USB.
@@ -53,7 +54,7 @@ PlevelAI turns a Jetson-powered camera feed into commands for a pan/tilt laser h
 ```bash
 git clone https://github.com/Barneyrabble/plevelai.git
 cd plevelai
-# Place or symlink YOLO weights (PT/engine) at vision/models/best.pt
+# Place or symlink YOLO weights (PT/engine) at models/best.pt
 ./launch
 ```
 
@@ -85,6 +86,12 @@ python -m apps.weeder_runtime.runtime --config configs/robot.yaml --log detectio
 python -m apps.weeder_runtime.runtime --serial-port /dev/ttyACM0
 ```
 
+## Offline smoke test (no hardware)
+```bash
+./scripts/smoke_offline.sh
+```
+Runs a dry-run against a sample log and temp homography to validate imports and paths.
+
 ## Dashboard (optional)
 ```bash
 ./dashboard
@@ -95,7 +102,7 @@ The backend launches YOLO + IK internally using the same defaults as `./launch`,
 
 ## Configuration and calibration
 - `configs/robot.yaml` - fill in pan/tilt geometry, joint limits, homing, serial port/baud rate, and queue thresholds.
-- `vision/calibration/` - store the homography (`H_img_to_ground.npy`) and calibration notes.
+- `calibration/` - store the homography (`H_img_to_ground.npy`) and calibration notes.
 - `docs/IK_PIPELINE.md` - IK + control walkthrough and required measurements.
 - `docs/PLEVELAI_OVERVIEW.md` - mission overview and bring-up checklist.
 

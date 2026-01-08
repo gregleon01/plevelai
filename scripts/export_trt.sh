@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-PT="${1:-vision/models/best.pt}"
+PT="${1:-models/best.pt}"
 python3 - <<PY
 from ultralytics import YOLO
 m = YOLO("${PT}")

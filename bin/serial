@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+ROOT_DIR="$(cd "$(dirname "${SCRIPT_PATH}")/.." && pwd)"
+CLI="${ROOT_DIR}/tools/arduino-cli"
+
+if [[ ! -x "${CLI}" ]]; then
+    echo "arduino-cli not found at ${CLI}." >&2
+    exit 1
+fi
+
+subcommand="${1:-}"
+case "${subcommand}" in
+    monitor)
+        PORT="${PORT:-/dev/ttyACM0}"
+        BAUD="${BAUDRATE:-115200}"
+        exec "${CLI}" monitor -p "${PORT}" --config "baudrate=${BAUD}"
+        ;;
+    ""|-h|--help|help)
+        cat <<USAGE
+Usage: ./serial monitor
+
+Environment:
+  PORT=/dev/ttyACM0   Serial device path
+  BAUDRATE=115200      Monitor baud rate
+USAGE
+        ;;
+    *)
+        echo "Unknown subcommand: ${subcommand}" >&2
+        echo "Run './serial monitor'" >&2
+        exit 1
+        ;;
+ esac

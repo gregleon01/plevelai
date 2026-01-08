@@ -7,6 +7,7 @@ CONFIG_PATH="${CONFIG:-${ROOT_DIR}/configs/robot.yaml}"
 SERIAL_PORT="${SERIAL_PORT:-}"
 BAUDRATE="${BAUDRATE:-}"
 DRY_RUN="${DRY_RUN:-0}"
+export PYTHONPATH="${ROOT_DIR}/src:${ROOT_DIR}:${PYTHONPATH:-}"
 
 mkdir -p "$(dirname "${LOG_PATH}")"
 : >"${LOG_PATH}"
@@ -22,7 +23,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 YOLO_ENV=(
-    MODEL="${MODEL:-${ROOT_DIR}/vision/models/best.pt}"
+    MODEL="${MODEL:-${ROOT_DIR}/models/best.pt}"
     CAM="${CAM:-csi}"
     SENSOR_ID="${SENSOR_ID:-0}"
     IMGSZ="${IMGSZ:-640}"
@@ -31,7 +32,7 @@ YOLO_ENV=(
     PORT="${PORT:-8080}"
 )
 
-( export "${YOLO_ENV[@]}"; python3 "${ROOT_DIR}/yolo_log_and_stream.py" ) &
+( export "${YOLO_ENV[@]}"; python3 -m apps.yolo.yolo_log_and_stream ) &
 YOLO_PID=$!
 
 RUNTIME_CMD=(python3 -m apps.weeder_runtime.runtime --config "${CONFIG_PATH}" --log "${LOG_PATH}")

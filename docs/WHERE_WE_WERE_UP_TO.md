@@ -23,7 +23,7 @@ The DM556 drivers and the Arduino UNO R4 WiFi now share a clean logic reference,
 - Pulse timing fixed at 15 microsecond STEP high/low with a 20 microsecond DIR settle, satisfying DM556 requirements.
 - Default steps-per-degree now use the 3200 pulses/rev DIP setting (≈8.89 steps/deg); adjust over JSON `config` if calibration drifts.
 - `motors_check` command sweeps pan/tilt and fires the laser twice so demos run even without the Jetson runtime.
-- Working snapshot saved at `control/arduino/nano_r4/working_sketch_2025-10-15.ino` for quick rollback.
+- Working snapshot saved at `firmware/uno_r4/working_sketch_2025-10-15.ino` for quick rollback.
 
 Key excerpts for quick reference:
 ```cpp
@@ -44,6 +44,6 @@ constexpr uint16_t DIR_SETUP_DELAY_US = 20;
 3. If motors hold but do not step, confirm driver microstep DIP (target 3200 pulses/rev) and probe the STEP pins for pulses.
 
 ## Next session checklist
-- Upload the refreshed firmware (`control/arduino/nano_r4/nano_r4.ino`) and let it auto-home; verify telemetry reflects DM556 timing constants.
-- Kick off `MODEL=vision/models/best.pt ./launch` on the Jetson and watch `arduino-cli monitor` to confirm a steady stream of `dispatch` events.
+- Upload the refreshed firmware (`firmware/uno_r4/nano_r4.ino`) and let it auto-home; verify telemetry reflects DM556 timing constants.
+- Kick off `MODEL=models/best.pt ./launch` on the Jetson and watch `arduino-cli monitor` to confirm a steady stream of `dispatch` events.
 - Tweak `steps_per_deg` in `configs/robot.yaml` if the 3200 microstep assumption drifts, then re-enable laser firing and validate pulse timing at the DM556 inputs.

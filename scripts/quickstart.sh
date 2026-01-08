@@ -22,7 +22,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 if [[ ! -f /etc/nv_tegra_release ]]; then
   echo "❌ This quickstart is intended for NVIDIA Jetson (JetPack)."
   echo "   You can still run the app if deps are installed:"
-  echo "   cd apps/yolo_live && ./run_yolo_live.sh ../../vision/models/best.pt"
+  echo "   cd apps/yolo_live && ./run_yolo_live.sh ../../models/best.pt"
   exit 1
 fi
 
@@ -43,8 +43,8 @@ choose_model() {
   local c
   for c in \
     "${MODEL_ARG}" \
-    "${ROOT_DIR}/vision/models/best.engine" \
-    "${ROOT_DIR}/vision/models/best.pt" \
+    "${ROOT_DIR}/models/best.engine" \
+    "${ROOT_DIR}/models/best.pt" \
     "/ssd/yolo/best.engine" "/ssd/yolo/best_1.pt" "/ssd/yolo/best.pt" \
     "/mnt/nvme/yolo/best.engine" "/mnt/nvme/yolo/best_1.pt" "/mnt/nvme/yolo/best.pt"
   do
@@ -57,7 +57,7 @@ MODEL="$(choose_model)"
 if [[ -z "${MODEL}" ]]; then
   echo "❌ No model found."
   echo "Place weights at one of:"
-  echo "  - ${ROOT_DIR}/vision/models/best.pt  (recommended symlink/copy)"
+  echo "  - ${ROOT_DIR}/models/best.pt  (recommended symlink/copy)"
   echo "  - /ssd/yolo/best_1.pt or /ssd/yolo/best.pt"
   echo "  - /mnt/nvme/yolo/best_1.pt or /mnt/nvme/yolo/best.pt"
   echo "Or pass a path:  ./scripts/quickstart.sh /path/to/your.pt"

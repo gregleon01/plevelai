@@ -26,8 +26,8 @@ This directory contains the production firmware for the pan/tilt head when it is
 
 ## Building and uploading
 ```bash
-arduino-cli compile --fqbn arduino:renesas_uno:unor4wifi control/arduino/nano_r4
-arduino-cli upload --fqbn arduino:renesas_uno:unor4wifi --port /dev/ttyACM0 control/arduino/nano_r4
+arduino-cli compile --fqbn arduino:renesas_uno:unor4wifi firmware/uno_r4
+arduino-cli upload --fqbn arduino:renesas_uno:unor4wifi --port /dev/ttyACM0 firmware/uno_r4
 ```
 
 Monitor the serial port at 115200 baud for telemetry (`{"status":"telemetry",...}`) and acknowledgements (`{"status":"queued"}`, `{"status":"dispatch"}`, etc.).

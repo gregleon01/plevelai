@@ -47,7 +47,8 @@ def video_stream() -> StreamingResponse:
     )
 
 
-STATIC_DIR = Path(__file__).resolve().parent.parent / "frontend"
+ROOT_DIR = Path(__file__).resolve().parents[4]
+STATIC_DIR = ROOT_DIR / "web" / "dashboard"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=STATIC_DIR, html=True), name="static")
 

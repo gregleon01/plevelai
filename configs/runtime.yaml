@@ -1,4 +1,4 @@
-model_path: "vision/models/best.pt"
+model_path: "models/best.pt"
 imgsz: 640
 conf: 0.25
 save_output: false

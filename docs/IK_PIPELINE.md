@@ -3,8 +3,8 @@
 This is the plan for taking YOLO detections and driving the steppers via joint angles.
 
 ## Flow
-1. YOLO app logs detections to `detections.log` (`yolo_to_log.py` / `launch`).
-2. `apps/weeder_runtime/runtime.py` tails the log, converts pixel centers via homography, merges duplicates, queues candidates, and solves pan/tilt angles using `kinematics.pan_tilt.PanTiltRig`.
+1. YOLO app logs detections to `detections.log` (`apps/yolo/yolo_to_log.py` / `launch`).
+2. `apps/weeder_runtime/runtime.py` tails the log, converts pixel centers via homography, merges duplicates, queues candidates, and solves pan/tilt angles using `plevelai.kinematics.pan_tilt.PanTiltRig`.
 3. Joint angles are streamed as JSON lines over serial using `control.host.serial_bridge.ArduinoBridge`.
 4. Arduino UNO R4 WiFi firmware consumes `{ "cmd": "move", "joints": {"joint_1": θ1_deg, "joint_2": θ2_deg}, ... }` and performs motion + laser gating.
 
@@ -17,7 +17,7 @@ This is the plan for taking YOLO detections and driving the steppers via joint a
   - `camera_to_arm.rotation_deg` / `translation_m`: rotation + XY offset from camera ground frame to arm base frame.
   - `arduino.port`: serial device path.
   - `min_confidence` / `min_bbox_area_px`: detection filters.
-- `vision/calibration/H_img_to_ground.npy`: run the steps in `docs/CALIBRATION_GUIDE.md`.
+- `calibration/H_img_to_ground.npy`: run the steps in `docs/CALIBRATION_GUIDE.md`.
 
 ## Arduino firmware outline
 - Use `Serial.begin(baudrate)` matching `configs/robot.yaml`.
@@ -50,5 +50,5 @@ python -m apps.weeder_runtime.runtime --serial-port /dev/ttyACM0
 ## Next steps
 - Validate homography by projecting a grid of test points.
 - Tune the arm geometry until `--dry-run` outputs sensible angles.
-- Extend the Arduino UNO R4 WiFi firmware (in `control/arduino/nano_r4`) with additional safeties and limit handling as the mechanical design firms up.
+- Extend the Arduino UNO R4 WiFi firmware (in `firmware/uno_r4`) with additional safeties and limit handling as the mechanical design firms up.
 - Add motion queueing / time synchronization if you need continuous scanning instead of single-shot moves.

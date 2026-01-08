@@ -4,7 +4,7 @@ import uvicorn
 
 
 def main() -> None:
-    uvicorn.run("dashboard_pkg.backend.app:app", host="0.0.0.0", port=8000, reload=False)
+    uvicorn.run("plevelai.dashboard.backend.app:app", host="0.0.0.0", port=8000, reload=False)
 
 
 if __name__ == "__main__":
