@@ -5,7 +5,7 @@ Quick steps to confirm the new layout and paths are healthy.
 ## Offline (no hardware, no camera)
 1. Run the smoke test (creates a temp homography + log, dry-run only):
    ```bash
-   ./scripts/smoke_offline.sh
+   ./scripts/runtime/smoke_offline.sh
    ```
    Expect to see a `[dry-run]` move payload; no serial port needed.
 

@@ -4,7 +4,7 @@ set -euo pipefail
 # Offline smoke test: runs the runtime against a tiny sample log with a dummy homography.
 # No camera, GPU, or serial hardware required.
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 export PYTHONPATH="${ROOT_DIR}/src:${ROOT_DIR}:${PYTHONPATH:-}"
 
 TMP_DIR="$(mktemp -d /tmp/plevelai_smoke.XXXXXX)"

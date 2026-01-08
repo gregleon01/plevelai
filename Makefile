@@ -11,13 +11,13 @@ run:
 	BAUDRATE=$(BAUDRATE) \
 	CONFIG=$(CONFIG) \
 	DRY_RUN=$(DRY_RUN) \
-	./scripts/launch_pipeline.sh
+	./scripts/runtime/launch_pipeline.sh
 
 headless:
-	@SHOW=0 ./scripts/quickstart.sh
+	@SHOW=0 ./scripts/runtime/quickstart.sh
 
 usb:
-	@CAM=usb USB_INDEX=0 SHOW=1 ./scripts/quickstart.sh
+	@CAM=usb USB_INDEX=0 SHOW=1 ./scripts/runtime/quickstart.sh
 
 trt:
-	@./scripts/export_trt.sh models/best.pt
+	@./scripts/build/export_trt.sh models/best.pt

@@ -48,7 +48,7 @@ PlevelAI turns a Jetson-powered camera feed into commands for a pan/tilt laser h
 ## Requirements
 **Hardware:** Jetson running JetPack 6.x (preferred) or a Linux machine with CUDA/GPU, CSI or USB camera, and the pan/tilt rig connected to an Arduino UNO R4 WiFi over USB.
 
-**Software:** Python 3.8+, OpenCV, NumPy, `ultralytics`, FastAPI (for the dashboard), plus JetPack system dependencies. `scripts/quickstart.sh` will bootstrap the minimum packages on a Jetson.
+**Software:** Python 3.8+, OpenCV, NumPy, `ultralytics`, FastAPI (for the dashboard), plus JetPack system dependencies. `scripts/runtime/quickstart.sh` will bootstrap the minimum packages on a Jetson.
 
 ## Quickstart (Jetson)
 ```bash
@@ -74,9 +74,9 @@ PORT=9090 ./launch                              # change MJPEG/HTTP port
 ## YOLO viewer only
 The legacy quickstart still works if you just want a window on the Jetson:
 ```bash
-./scripts/quickstart.sh            # CSI camera, shows window on :0
-SHOW=0 ./scripts/quickstart.sh     # headless
-CAM=usb USB_INDEX=1 ./scripts/quickstart.sh
+./scripts/runtime/quickstart.sh            # CSI camera, shows window on :0
+SHOW=0 ./scripts/runtime/quickstart.sh     # headless
+CAM=usb USB_INDEX=1 ./scripts/runtime/quickstart.sh
 ```
 
 ## Runtime / IK loop on its own
@@ -88,7 +88,7 @@ python -m apps.weeder_runtime.runtime --serial-port /dev/ttyACM0
 
 ## Offline smoke test (no hardware)
 ```bash
-./scripts/smoke_offline.sh
+./scripts/runtime/smoke_offline.sh
 ```
 Runs a dry-run against a sample log and temp homography to validate imports and paths.
 

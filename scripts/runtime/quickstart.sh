@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Quickstart: from fresh clone to live window on Jetson.
 # Usage:
-#   ./scripts/quickstart.sh [optional_model_path]
+#   ./scripts/runtime/quickstart.sh [optional_model_path]
 # Env:
 #   CAM=csi|usb   (default csi)
 #   USB_INDEX=0
@@ -16,7 +16,7 @@ USB_INDEX="${USB_INDEX:-0}"
 SHOW="${SHOW:-1}"
 RESTART_ARGUS="${RESTART_ARGUS:-0}"
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # 1) Detect Jetson
 if [[ ! -f /etc/nv_tegra_release ]]; then
@@ -35,7 +35,7 @@ PY
 
 if [[ "$NEED_INSTALL" == "1" ]]; then
   echo "ℹ️ Installing minimal dependencies (JetPack 6.2)…"
-  "${ROOT_DIR}/scripts/install_jp62_min.sh"
+  "${ROOT_DIR}/scripts/install/install_jp62_min.sh"
 fi
 
 # 3) Pick a model (priority: CLI arg → repo → common NVMe paths)
@@ -60,7 +60,7 @@ if [[ -z "${MODEL}" ]]; then
   echo "  - ${ROOT_DIR}/models/best.pt  (recommended symlink/copy)"
   echo "  - /ssd/yolo/best_1.pt or /ssd/yolo/best.pt"
   echo "  - /mnt/nvme/yolo/best_1.pt or /mnt/nvme/yolo/best.pt"
-  echo "Or pass a path:  ./scripts/quickstart.sh /path/to/your.pt"
+  echo "Or pass a path:  ./scripts/runtime/quickstart.sh /path/to/your.pt"
   exit 1
 fi
 
